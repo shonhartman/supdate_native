@@ -6,13 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXFileReference section */
-		BA2A86952F2AB6B4008D4290 /* supdate_native.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = supdate_native.app; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
-
 /* Begin PBXBuildFile section */
 		BA2A86B32F2AB6C0008D4290 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = BA2A86B22F2AB6C0008D4290 /* Supabase */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		BA2A86952F2AB6B4008D4290 /* supdate_native.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = supdate_native.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		BA2A86972F2AB6B4008D4290 /* supdate_native */ = {
