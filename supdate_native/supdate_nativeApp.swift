@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct supdate_nativeApp: App {
+    @State private var authState = AuthState()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.authState, authState)
         }
     }
 }
