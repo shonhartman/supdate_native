@@ -1,23 +1,21 @@
 //
-//  SignUpView.swift
+//  SignInView.swift
 //  supdate_native
 //
-//  Sign up with email and password. On success, session updates via AuthState;
-//  if email confirmation is on, we show "Check your email to confirm."
+//  Sign in with email and password. On success, AuthState updates and root shows main content.
 //
 
 import Supabase
 import SwiftUI
 
-struct SignUpView: View {
+struct SignInView: View {
     @Environment(\.authState) private var authState
 
-    var onSwitchToSignIn: (() -> Void)?
+    var onSwitchToSignUp: (() -> Void)?
 
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage: String?
-    @State private var showEmailConfirmationMessage = false
     @State private var isLoading = false
 
     var body: some View {
@@ -28,7 +26,7 @@ struct SignUpView: View {
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                 SecureField("Password", text: $password)
-                    .textContentType(.newPassword)
+                    .textContentType(.password)
             }
 
             if let errorMessage {
@@ -38,45 +36,34 @@ struct SignUpView: View {
                 }
             }
 
-            if showEmailConfirmationMessage {
-                Section {
-                    Text("Check your email to confirm your account.")
-                        .foregroundStyle(.secondary)
-                }
-            }
-
             Section {
-                Button("Sign up") {
-                    Task { await signUp() }
+                Button("Sign in") {
+                    Task { await signIn() }
                 }
                 .disabled(email.isEmpty || password.isEmpty || isLoading)
                 .frame(maxWidth: .infinity)
             }
 
-            if let onSwitchToSignIn {
+            if let onSwitchToSignUp {
                 Section {
-                    Button("Already have an account? Sign in") {
-                        onSwitchToSignIn()
+                    Button("Create account") {
+                        onSwitchToSignUp()
                     }
                     .frame(maxWidth: .infinity)
                 }
             }
         }
-        .navigationTitle("Sign up")
+        .navigationTitle("Sign in")
     }
 
-    private func signUp() async {
+    private func signIn() async {
         errorMessage = nil
-        showEmailConfirmationMessage = false
         isLoading = true
         defer { isLoading = false }
 
         do {
-            let response = try await supabase.auth.signUp(email: email, password: password)
-            if response.session == nil {
-                showEmailConfirmationMessage = true
-            }
-            // If session is non-nil, AuthState will update and root will show ContentView
+            _ = try await supabase.auth.signIn(email: email, password: password)
+            // AuthState will update via onAuthStateChange; root shows ContentView
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -84,6 +71,6 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView()
+    SignInView()
         .environment(\.authState, AuthState())
 }

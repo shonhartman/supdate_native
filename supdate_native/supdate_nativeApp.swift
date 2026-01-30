@@ -17,7 +17,7 @@ struct supdate_nativeApp: App {
                 if authState.isLoggedIn {
                     ContentView()
                 } else {
-                    SignUpView()
+                    AuthView()
                 }
             }
             .environment(\.authState, authState)
