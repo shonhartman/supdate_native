@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BA2A86B32F2AB6C0008D4290 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = BA2A86B22F2AB6C0008D4290 /* Supabase */; };
+		BA2A86C12F2AB6E0008D4290 /* Supabase.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,6 +121,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA2A86C12F2AB6E0008D4290 /* Supabase.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +261,7 @@
 		};
 		BA2A86A12F2AB6B6008D4290 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -292,6 +295,7 @@
 		};
 		BA2A86A22F2AB6B6008D4290 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
