@@ -33,9 +33,9 @@ final class AuthState {
     private func attachListener() async {
         let reg = await supabase.auth.onAuthStateChange { [weak self] _, session in
             Task { @MainActor in
-                guard let self else { return }
-                self.session = session
-                self.hasReceivedInitialSession = true
+                guard let me = self else { return }
+                me.session = session
+                me.hasReceivedInitialSession = true
             }
         }
         registration = reg
