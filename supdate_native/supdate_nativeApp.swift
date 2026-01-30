@@ -13,8 +13,14 @@ struct supdate_nativeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.authState, authState)
+            Group {
+                if authState.isLoggedIn {
+                    ContentView()
+                } else {
+                    SignUpView()
+                }
+            }
+            .environment(\.authState, authState)
         }
     }
 }
