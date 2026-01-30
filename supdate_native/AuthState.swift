@@ -25,7 +25,9 @@ final class AuthState {
     private var registration: (any AuthStateChangeListenerRegistration)?
 
     init() {
-        Task { await attachListener() }
+        Task { @MainActor in
+            await attachListener()
+        }
     }
 
     private func attachListener() async {
