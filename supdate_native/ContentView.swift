@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var photosPermission = PhotosPermission()
     @State private var signOutError: String?
     @Environment(\.openURL) private var openURL
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         VStack(spacing: 20) {
@@ -26,6 +27,11 @@ struct ContentView: View {
         .padding()
         .onAppear {
             photosPermission.refreshStatus()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                photosPermission.refreshStatus()
+            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
