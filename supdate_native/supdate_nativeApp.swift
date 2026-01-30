@@ -5,6 +5,7 @@
 //  Created by Shaun Hartman on 1/28/26.
 //
 
+import Supabase
 import SwiftUI
 
 @main
@@ -23,6 +24,9 @@ struct supdate_nativeApp: App {
                 }
             }
             .environment(\.authState, authState)
+            .onOpenURL { url in
+                supabase.auth.handle(url)
+            }
         }
     }
 }
