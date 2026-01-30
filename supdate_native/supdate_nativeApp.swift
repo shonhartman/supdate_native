@@ -23,7 +23,9 @@ struct supdate_nativeApp: App {
                         ContentView()
                     }
                 } else {
-                    AuthView()
+                    NavigationStack {
+                        AuthView()
+                    }
                 }
             }
             .environment(\.authState, authState)
