@@ -12,6 +12,7 @@
 
 /* Begin PBXFileReference section */
 		BA2A86952F2AB6B4008D4290 /* supdate_native.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = supdate_native.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Supabase.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -37,6 +38,7 @@
 		BA2A868C2F2AB6B4008D4290 = {
 			isa = PBXGroup;
 			children = (
+				BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */,
 				BA2A86972F2AB6B4008D4290 /* supdate_native */,
 				BA2A86962F2AB6B4008D4290 /* Products */,
 			);
@@ -136,6 +138,7 @@
 /* Begin XCBuildConfiguration section */
 		BA2A869E2F2AB6B6008D4290 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -199,6 +202,7 @@
 		};
 		BA2A869F2F2AB6B6008D4290 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -262,6 +266,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_SupabaseKey = "$(SUPABASE_ANON_KEY)";
+				INFOPLIST_KEY_SupabaseURL = "$(SUPABASE_URL)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -293,6 +299,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_SupabaseKey = "$(SUPABASE_ANON_KEY)";
+				INFOPLIST_KEY_SupabaseURL = "$(SUPABASE_URL)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
