@@ -6,8 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BA2A86B32F2AB6C0008D4290 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = BA2A86B22F2AB6C0008D4290 /* Supabase */; };
+		BA2A86C12F2AB6E0008D4290 /* Supabase.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		BA2A86952F2AB6B4008D4290 /* supdate_native.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = supdate_native.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Supabase.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA2A86B32F2AB6C0008D4290 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,6 +39,7 @@
 		BA2A868C2F2AB6B4008D4290 = {
 			isa = PBXGroup;
 			children = (
+				BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */,
 				BA2A86972F2AB6B4008D4290 /* supdate_native */,
 				BA2A86962F2AB6B4008D4290 /* Products */,
 			);
@@ -65,6 +73,7 @@
 			);
 			name = supdate_native;
 			packageProductDependencies = (
+				BA2A86B22F2AB6C0008D4290 /* Supabase */,
 			);
 			productName = supdate_native;
 			productReference = BA2A86952F2AB6B4008D4290 /* supdate_native.app */;
@@ -94,6 +103,9 @@
 			);
 			mainGroup = BA2A868C2F2AB6B4008D4290;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BA2A86B12F2AB6C0008D4290 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BA2A86962F2AB6B4008D4290 /* Products */;
 			projectDirPath = "";
@@ -109,6 +121,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA2A86C12F2AB6E0008D4290 /* Supabase.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +140,7 @@
 /* Begin XCBuildConfiguration section */
 		BA2A869E2F2AB6B6008D4290 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -190,6 +204,7 @@
 		};
 		BA2A869F2F2AB6B6008D4290 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -246,6 +261,7 @@
 		};
 		BA2A86A12F2AB6B6008D4290 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -253,6 +269,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_SupabaseKey = "$(SUPABASE_ANON_KEY)";
+				INFOPLIST_KEY_SupabaseURL = "$(SUPABASE_URL)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -277,6 +295,7 @@
 		};
 		BA2A86A22F2AB6B6008D4290 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BA2A86C02F2AB6D0008D4290 /* Supabase.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -284,6 +303,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_SupabaseKey = "$(SUPABASE_ANON_KEY)";
+				INFOPLIST_KEY_SupabaseURL = "$(SUPABASE_URL)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -328,6 +349,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BA2A86B12F2AB6C0008D4290 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BA2A86B22F2AB6C0008D4290 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BA2A86B12F2AB6C0008D4290 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BA2A868D2F2AB6B4008D4290 /* Project object */;
 }

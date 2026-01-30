@@ -26,5 +26,8 @@ Pods/
 *.xcworkspace
 !default.xcworkspace
 
+# Supabase config (contains project URL and key; use Supabase.xcconfig.example as template)
+Supabase.xcconfig
+
 # macOS
 .DS_Store

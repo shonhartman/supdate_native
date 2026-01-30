@@ -35,11 +35,10 @@ Minimal SwiftUI shell: `supdate_nativeApp` → `WindowGroup` → `ContentView` (
 ## Setup
 
 1. Clone the repo.
-2. Open `supdate_native.xcodeproj` in Xcode.
-3. Select a simulator or device (iOS 18+).
-4. Run (⌘R).
-
-No external dependencies. Xcode default build is sufficient.
+2. **Supabase (auth):** Copy `Supabase.xcconfig.example` to `Supabase.xcconfig` and set `SUPABASE_URL` and `SUPABASE_ANON_KEY` to your project’s values. Do not commit `Supabase.xcconfig` (it is gitignored).
+3. Open `supdate_native.xcodeproj` in Xcode.
+4. Select a simulator or device (iOS 18+).
+5. Run (⌘R).
 
 ---
 
