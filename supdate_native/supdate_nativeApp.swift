@@ -15,7 +15,10 @@ struct supdate_nativeApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if authState.isLoggedIn {
+                if !authState.hasReceivedInitialSession {
+                    ProgressView("Loading…")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if authState.isLoggedIn {
                     NavigationStack {
                         ContentView()
                     }

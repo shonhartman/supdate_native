@@ -15,6 +15,10 @@ import SwiftUI
 final class AuthState {
     private(set) var session: Session?
 
+    /// True after Supabase has emitted the initial session (restored from storage or nil).
+    /// Use this to avoid showing AuthView before we know whether the user is logged in.
+    private(set) var hasReceivedInitialSession = false
+
     var isLoggedIn: Bool { session != nil }
     var currentUser: User? { session?.user }
 
@@ -27,7 +31,9 @@ final class AuthState {
     private func attachListener() async {
         let reg = await supabase.auth.onAuthStateChange { [weak self] _, session in
             Task { @MainActor in
-                self?.session = session
+                guard let self else { return }
+                self.session = session
+                self.hasReceivedInitialSession = true
             }
         }
         registration = reg
