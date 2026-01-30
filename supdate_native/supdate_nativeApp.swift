@@ -15,7 +15,9 @@ struct supdate_nativeApp: App {
         WindowGroup {
             Group {
                 if authState.isLoggedIn {
-                    ContentView()
+                    NavigationStack {
+                        ContentView()
+                    }
                 } else {
                     AuthView()
                 }
