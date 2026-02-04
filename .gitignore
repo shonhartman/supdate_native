@@ -28,6 +28,8 @@ Pods/
 
 # Supabase config (contains project URL and key; use Supabase.xcconfig.example as template)
 Supabase.xcconfig
+# Supabase CLI cache (linked project ref, versions, storage-migration state)
+supabase/.temp/
 
 # macOS
 .DS_Store
