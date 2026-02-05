@@ -42,26 +42,32 @@ final class CuratorViewModel {
     }
 
     /// Process images and call the Edge Function. Call from main actor after user selects 2–10 photos.
+    /// Image processing and network work run off the main actor; only state updates hop back to main.
     func runCurator(with images: [UIImage]) async {
-        state = .loading
-        selectedImages = images
+        await MainActor.run {
+            state = .loading
+            selectedImages = images
+        }
 
         guard images.count >= 2, images.count <= 10 else {
-            state = .error("Please select between 2 and 10 photos.")
+            await MainActor.run { state = .error("Please select between 2 and 10 photos.") }
             return
         }
 
-        let base64Strings = images.compactMap { CuratorImageProcessor.process($0) }
+        let base64Strings = await Task.detached(priority: .userInitiated) {
+            images.compactMap { CuratorImageProcessor.process($0) }
+        }.value
+
         guard base64Strings.count == images.count else {
-            state = .error("Could not process one or more images.")
+            await MainActor.run { state = .error("Could not process one or more images.") }
             return
         }
 
         do {
             let result = try await CuratorService.invokeCurator(imagesBase64: base64Strings)
-            state = .success(result)
+            await MainActor.run { state = .success(result) }
         } catch {
-            state = .error(error.localizedDescription)
+            await MainActor.run { state = .error(error.localizedDescription) }
         }
     }
 
