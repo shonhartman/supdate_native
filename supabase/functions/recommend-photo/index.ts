@@ -20,6 +20,8 @@ interface GeminiGenerateContentResponse {
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
+/** Timeout for the Gemini API request; avoids hanging on slow or stuck responses. */
+const GEMINI_REQUEST_TIMEOUT_MS = 60_000;
 
 function buildGeminiParts(images: string[]): Record<string, unknown>[] {
   const parts: Record<string, unknown>[] = [
@@ -54,11 +56,22 @@ async function callGemini(apiKey: string, images: string[]): Promise<Recommendat
     },
   };
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(
+    () => controller.abort(),
+    GEMINI_REQUEST_TIMEOUT_MS,
+  );
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   if (!res.ok) {
     const errText = await res.text();
