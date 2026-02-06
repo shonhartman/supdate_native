@@ -23,6 +23,10 @@ const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
 /** Timeout for the Gemini API request; avoids hanging on slow or stuck responses. */
 const GEMINI_REQUEST_TIMEOUT_MS = 60_000;
+/** Max base64 size per image (bytes); avoids memory blowup from huge single images. */
+const MAX_PER_IMAGE_BASE64_BYTES = 2 * 1024 * 1024; // 2 MiB
+/** Max total base64 size for all images (bytes); caps memory and processing time. */
+const MAX_TOTAL_BASE64_BYTES = 12 * 1024 * 1024; // 12 MiB
 
 function buildGeminiParts(images: string[]): Record<string, unknown>[] {
   const parts: Record<string, unknown>[] = [
@@ -153,6 +157,34 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({
           error: "Please provide between 2 and 10 images (base64 strings).",
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        }
+      );
+    }
+
+    let totalBase64Bytes = 0;
+    for (let i = 0; i < images.length; i++) {
+      const size = new TextEncoder().encode(images[i]).length;
+      if (size > MAX_PER_IMAGE_BASE64_BYTES) {
+        return new Response(
+          JSON.stringify({
+            error: `Image at index ${i} exceeds max size (${MAX_PER_IMAGE_BASE64_BYTES} bytes). Compress or resize images before uploading.`,
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 400,
+          }
+        );
+      }
+      totalBase64Bytes += size;
+    }
+    if (totalBase64Bytes > MAX_TOTAL_BASE64_BYTES) {
+      return new Response(
+        JSON.stringify({
+          error: `Total payload exceeds max size (${MAX_TOTAL_BASE64_BYTES} bytes). Use fewer or smaller images.`,
         }),
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
