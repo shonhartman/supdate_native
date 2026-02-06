@@ -40,6 +40,19 @@ Minimal SwiftUI shell: `supdate_nativeApp` → `WindowGroup` → `ContentView` (
 4. Select a simulator or device (iOS 18+).
 5. Run (⌘R).
 
+### Deploying the AI Curator Edge Function
+
+The `recommend-photo` Edge Function lives in `supabase/functions/recommend-photo/` and uses **Google Gemini 2.5 Flash (vision)** to pick the best photo and generate a caption and vibe. To deploy:
+
+1. Install the [Supabase CLI](https://supabase.com/docs/guides/cli) and log in.
+2. From the repo root, link the project (one-time): `supabase link --project-ref <your-project-ref>`.
+3. Set the Gemini API key (get one at [Google AI Studio](https://aistudio.google.com/apikey)):  
+   `supabase secrets set GEMINI_API_KEY=<your-key>`
+4. Deploy with JWT verification skipped at the gateway (the function verifies the JWT itself):  
+   `supabase functions deploy recommend-photo --no-verify-jwt`
+
+The function accepts `{ "images": [ "<base64>", ... ] }` (2–10 items) and returns `{ "recommendedIndex", "caption", "vibe" }`. It requires a signed-in user (JWT). If you get **401 Unauthorized**, ensure you’re signed in in the app, the app’s `SUPABASE_URL` / `SUPABASE_ANON_KEY` match the linked project, and the function verifies the JWT inside the function. If 401, ensure you're signed in.
+
 ---
 
 ## License

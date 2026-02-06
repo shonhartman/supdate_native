@@ -12,17 +12,23 @@ import SwiftUI
 struct ContentView: View {
     @State private var photosPermission = PhotosPermission()
     @State private var signOutError: String?
+    @State private var curatorViewModel = CuratorViewModel()
+    @State private var showCuratorPhotoPicker = false
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("'Sup'!")
+        ScrollView {
+            VStack(spacing: 20) {
+                Image(systemName: "globe")
+                    .imageScale(.large)
+                    .foregroundStyle(.tint)
+                Text("'Sup'!")
 
-            photosAccessSection
+                photosAccessSection
+                curatorSection
+            }
+            .padding()
         }
         .padding()
         .onAppear {
@@ -48,6 +54,69 @@ struct ContentView: View {
         } message: {
             Text(signOutError ?? "")
         }
+        .sheet(isPresented: $showCuratorPhotoPicker) {
+            CuratorPhotoPicker(
+                onComplete: { images in
+                    showCuratorPhotoPicker = false
+                    Task { await curatorViewModel.runCurator(with: images) }
+                },
+                onCancel: { showCuratorPhotoPicker = false }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private var curatorSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("AI Curator")
+                .font(.headline)
+            if curatorViewModel.isIdle {
+                Button("Curate My Photos") {
+                    showCuratorPhotoPicker = true
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            if curatorViewModel.isLoading {
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text("Choosing your best photo…")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            if let rec = curatorViewModel.recommendation,
+               rec.recommendedIndex >= 0,
+               rec.recommendedIndex < curatorViewModel.selectedImages.count {
+                let image = curatorViewModel.selectedImages[rec.recommendedIndex]
+                RecommendedPhotoCard(image: image, caption: rec.caption, vibe: rec.vibe)
+                HStack(spacing: 12) {
+                    Button("Try Again") {
+                        showCuratorPhotoPicker = true
+                    }
+                    .buttonStyle(.bordered)
+                    Button("Reset") {
+                        curatorViewModel.reset()
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+            if let message = curatorViewModel.errorMessage {
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundStyle(.red)
+                Button("Try Again") {
+                    showCuratorPhotoPicker = true
+                }
+                .buttonStyle(.bordered)
+                Button("Reset") {
+                    curatorViewModel.reset()
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.bar, in: RoundedRectangle(cornerRadius: 12))
     }
 
     @ViewBuilder
