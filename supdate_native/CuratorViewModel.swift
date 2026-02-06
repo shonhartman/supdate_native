@@ -55,7 +55,18 @@ final class CuratorViewModel {
         }
 
         let base64Strings = await Task.detached(priority: .userInitiated) {
-            images.compactMap { CuratorImageProcessor.process($0) }
+            await withTaskGroup(of: (Int, String?).self) { group in
+                for (index, image) in images.enumerated() {
+                    group.addTask {
+                        (index, CuratorImageProcessor.process(image))
+                    }
+                }
+                var ordered: [String?] = Array(repeating: nil, count: images.count)
+                for await (index, value) in group {
+                    ordered[index] = value
+                }
+                return ordered.compactMap { $0 }
+            }
         }.value
 
         guard base64Strings.count == images.count else {

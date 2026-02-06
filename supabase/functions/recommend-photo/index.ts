@@ -16,7 +16,6 @@ interface GeminiGenerateContentResponse {
     finishReason?: string;
     content?: { parts?: Array<{ text?: string }> };
   }>;
-  promptFeedback?: { blockReason?: string };
 }
 
 const GEMINI_MODEL = "gemini-2.5-flash";
@@ -69,16 +68,11 @@ async function callGemini(apiKey: string, images: string[]): Promise<Recommendat
   const data = (await res.json()) as GeminiGenerateContentResponse;
   const candidate = data.candidates?.[0];
   const finishReason = candidate?.finishReason ?? "(none)";
-  const promptBlockReason = data.promptFeedback?.blockReason;
 
   let text =
     candidate?.content?.parts?.[0]?.text?.trim();
   if (!text) {
-    console.error("[recommend-photo] Gemini returned no text:", {
-      finishReason,
-      promptBlockReason,
-      hasCandidates: Boolean(data.candidates?.length),
-    });
+    console.error("[recommend-photo] Gemini no text, finishReason:", finishReason);
     throw new Error("Gemini returned no text");
   }
 
@@ -97,27 +91,21 @@ async function callGemini(apiKey: string, images: string[]): Promise<Recommendat
   try {
     parsed = JSON.parse(text) as Recommendation;
   } catch (parseErr) {
-    console.error("[recommend-photo] Gemini response JSON.parse failed:", {
-      finishReason,
-      promptBlockReason,
-      parseError: parseErr instanceof Error ? parseErr.message : String(parseErr),
-      textLength: text.length,
-      textPreview: text.slice(0, 80),
-    });
+    console.error("[recommend-photo] Gemini invalid JSON, finishReason:", finishReason, "length:", text.length);
     throw new Error(
       `Gemini returned invalid JSON: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}. Response length: ${text.length}`
     );
   }
-  if (
-    typeof parsed.recommendedIndex !== "number" ||
-    typeof parsed.caption !== "string" ||
-    typeof parsed.vibe !== "string"
-  ) {
+  if (typeof parsed.caption !== "string" || typeof parsed.vibe !== "string") {
     throw new Error("Gemini response missing required fields");
   }
-
+  const rawIndex = parsed.recommendedIndex;
+  const indexNum = typeof rawIndex === "number" ? rawIndex : Number(rawIndex);
+  if (!Number.isFinite(indexNum)) {
+    throw new Error("Gemini response missing required fields");
+  }
   const maxIndex = images.length - 1;
-  const index = Math.max(0, Math.min(maxIndex, Math.floor(parsed.recommendedIndex)));
+  const index = Math.max(0, Math.min(maxIndex, Math.floor(indexNum)));
   return {
     recommendedIndex: index,
     caption: String(parsed.caption).slice(0, 500),

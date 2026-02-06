@@ -8,7 +8,7 @@
 import UIKit
 
 enum CuratorImageProcessor {
-    static let maxDimension: CGFloat = 1024
+    static let maxDimension: CGFloat = 768
     static let jpegQuality: CGFloat = 0.7
 
     /// Resizes image so the longest side is at most `maxDimension`, compresses to JPEG,
