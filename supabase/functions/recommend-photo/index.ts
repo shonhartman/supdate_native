@@ -1,3 +1,4 @@
+/// <reference path="../_shared/deno.d.ts" />
 import { corsHeaders } from "../_shared/cors.ts";
 import { getAuthToken, verifySupabaseJWT } from "../_shared/jwt.ts";
 
