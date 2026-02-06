@@ -7,13 +7,37 @@
 /// <reference path="./jose.d.ts" />
 import * as jose from "jsr:@panva/jose@6";
 
-const SUPABASE_JWT_ISSUER =
-  Deno.env.get("SB_JWT_ISSUER") ??
-  `${Deno.env.get("SUPABASE_URL")}/auth/v1`;
+const MISSING_URL_MESSAGE =
+  "SUPABASE_URL is not set. Set it in your project's Edge Function settings.";
 
-const SUPABASE_JWT_KEYS = jose.createRemoteJWKSet(
-  new URL(`${Deno.env.get("SUPABASE_URL")}/auth/v1/.well-known/jwks.json`),
-);
+let cachedIssuer: string | null = null;
+let cachedJwkSet: ReturnType<typeof jose.createRemoteJWKSet> | null = null;
+
+function getJwtConfig(): {
+  issuer: string;
+  jwkSet: ReturnType<typeof jose.createRemoteJWKSet>;
+} {
+  if (cachedJwkSet !== null) {
+    return { issuer: cachedIssuer!, jwkSet: cachedJwkSet };
+  }
+  const raw = Deno.env.get("SUPABASE_URL");
+  if (!raw || !raw.trim()) {
+    throw new Error(MISSING_URL_MESSAGE);
+  }
+  const base = raw.trim().replace(/\/$/, "");
+  try {
+    cachedIssuer =
+      Deno.env.get("SB_JWT_ISSUER") ?? `${base}/auth/v1`;
+    cachedJwkSet = jose.createRemoteJWKSet(
+      new URL(`${base}/auth/v1/.well-known/jwks.json`),
+    );
+  } catch (e) {
+    throw new Error(
+      `${MISSING_URL_MESSAGE} Invalid SUPABASE_URL: ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
+  return { issuer: cachedIssuer, jwkSet: cachedJwkSet };
+}
 
 export function getAuthToken(req: Request): string {
   const authHeader = req.headers.get("authorization");
@@ -28,7 +52,6 @@ export function getAuthToken(req: Request): string {
 }
 
 export async function verifySupabaseJWT(jwt: string) {
-  return jose.jwtVerify(jwt, SUPABASE_JWT_KEYS, {
-    issuer: SUPABASE_JWT_ISSUER,
-  });
+  const { issuer, jwkSet } = getJwtConfig();
+  return jose.jwtVerify(jwt, jwkSet, { issuer });
 }
