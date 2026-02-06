@@ -41,11 +41,22 @@ struct CuratorPhotoPicker: UIViewControllerRepresentable {
         }
 
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-            picker.dismiss(animated: true)
             guard !results.isEmpty else {
+                picker.dismiss(animated: true)
                 onCancel()
                 return
             }
+            guard results.count >= CuratorPhotoPicker.minSelection else {
+                let alert = UIAlertController(
+                    title: "More photos needed",
+                    message: "Please select at least \(CuratorPhotoPicker.minSelection) photos to curate.",
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                picker.present(alert, animated: true)
+                return
+            }
+            picker.dismiss(animated: true)
             loadImages(from: results) { [onComplete] images in
                 DispatchQueue.main.async {
                     onComplete(images)

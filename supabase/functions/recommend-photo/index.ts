@@ -13,8 +13,10 @@ interface Recommendation {
 
 interface GeminiGenerateContentResponse {
   candidates?: Array<{
+    finishReason?: string;
     content?: { parts?: Array<{ text?: string }> };
   }>;
+  promptFeedback?: { blockReason?: string };
 }
 
 const GEMINI_MODEL = "gemini-2.5-flash";
@@ -49,7 +51,7 @@ async function callGemini(apiKey: string, images: string[]): Promise<Recommendat
     generationConfig: {
       responseMimeType: "application/json",
       temperature: 0.4,
-      maxOutputTokens: 512,
+      maxOutputTokens: 2048,
     },
   };
 
@@ -65,10 +67,18 @@ async function callGemini(apiKey: string, images: string[]): Promise<Recommendat
   }
 
   const data = (await res.json()) as GeminiGenerateContentResponse;
+  const candidate = data.candidates?.[0];
+  const finishReason = candidate?.finishReason ?? "(none)";
+  const promptBlockReason = data.promptFeedback?.blockReason;
 
   let text =
-    data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    candidate?.content?.parts?.[0]?.text?.trim();
   if (!text) {
+    console.error("[recommend-photo] Gemini returned no text:", {
+      finishReason,
+      promptBlockReason,
+      hasCandidates: Boolean(data.candidates?.length),
+    });
     throw new Error("Gemini returned no text");
   }
 
@@ -87,6 +97,13 @@ async function callGemini(apiKey: string, images: string[]): Promise<Recommendat
   try {
     parsed = JSON.parse(text) as Recommendation;
   } catch (parseErr) {
+    console.error("[recommend-photo] Gemini response JSON.parse failed:", {
+      finishReason,
+      promptBlockReason,
+      parseError: parseErr instanceof Error ? parseErr.message : String(parseErr),
+      textLength: text.length,
+      textPreview: text.slice(0, 80),
+    });
     throw new Error(
       `Gemini returned invalid JSON: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}. Response length: ${text.length}`
     );
