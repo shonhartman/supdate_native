@@ -23,10 +23,13 @@ enum CuratorService {
 
     /// Sends base64 image strings to the Edge Function and returns the decoded recommendation.
     /// Requires an authenticated session. The Supabase client automatically attaches the user's JWT
-    /// to the request (via fetchWithAuth / setAuth), which the Edge Function gateway uses when verify_jwt is enabled.
+    /// to the request. We refresh the session only when the token is expired or near expiry to avoid
+    /// extra latency and to work better when offline with a valid cached token.
     static func invokeCurator(imagesBase64: [String]) async throws -> CuratorRecommendation {
-        _ = try await supabase.auth.session
-        try await supabase.auth.refreshSession()
+        let session = try await supabase.auth.session
+        if session.isExpired {
+            try await supabase.auth.refreshSession()
+        }
         let body = InvokeBody(images: imagesBase64)
         let options = FunctionInvokeOptions(body: body)
         let response: CuratorRecommendation = try await supabase.functions.invoke(
