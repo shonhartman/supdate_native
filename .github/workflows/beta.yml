@@ -19,6 +19,14 @@ jobs:
           ruby-version: "3.2"
           bundler-cache: true
 
+      - name: Create Supabase.xcconfig
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "SUPABASE_URL = $SUPABASE_URL" > Supabase.xcconfig
+          echo "SUPABASE_ANON_KEY = $SUPABASE_ANON_KEY" >> Supabase.xcconfig
+
       - name: Run Fastlane beta
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
